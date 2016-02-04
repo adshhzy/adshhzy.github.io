@@ -14,7 +14,7 @@ Figure 1: Input and output<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 2. Build the image pyramid for the three color channel images. (lowest
 resolution size should be less than (200*200))<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp; 3. Compute the misalignment of&nbsp; R to B, and of G to B.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp; 3. Compute the displacements of&nbsp; R to B, and of G to B.<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; 3.1&nbsp;&nbsp; Hierachically search from the lowest
@@ -29,7 +29,7 @@ are all fixed to 8*8 to decrease the computation.<br>
 normalized cross correlation as the measurement of matchness (higer
 correlation, better alignment).<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 4.
-Align orginal G and R to B based on the misalignment information, then
+Align orginal G and R to B based on the displacements information, then
 combine them into a single RGB color image, then crop the border base
 on a default value (10%) to remove the border line.<br>
 <br>
@@ -52,11 +52,11 @@ builds a five level image pyramid. The total time is around 16 seconds.<br>
 well.&nbsp; For "00998u.tif" and "00451u.tif", the algorithm works
 nearly perfectly, but for "01520u.tif", the result is not good.&nbsp;
 The reason may be that there are so many edges (the background trees)
-in this image and thus, there are so many local minimals for the error
-function. And remember that we are using image pyramid and hierachical
-search, the true grobal minimum may be overwhelmed in low resulotion
-levels, which leads to the misalignment on the beginning and it is not
-able to be fixed by the hierachical search over following levels.<br>
+in this image, and thus there are so many local minimals for the error
+function. And we are using image pyramid and hierachical search, so the
+true grobal minimum may be overwhelmed in low resulotion levels, which
+leads to the misalignment on the beginning and it is not able to be
+fixed by the hierachical search over following levels.<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Below is some experimental results.<br>
 <div style="text-align: center;"><img style="width: 478px; height: 391px;" src="01520u.png" alt=""><img style="width: 476px; height: 356px;" src="01520u_zoom.png" alt=""><br>
 Figure 2: Output of "01520u.tif". (Left: full picture, Right: zooming in)<br>
