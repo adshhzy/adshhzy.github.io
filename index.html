@@ -3,8 +3,8 @@
 <br>
 <span style="font-weight: bold;">Problem definition:</span> Giving three mismatched color channel images (R, G, B) of the same scene, align them to produce a single RGB color image.<br>
 <span style="font-weight: bold;">Input</span> <span style="font-weight: bold;">:</span>&nbsp; three color channel images (R, G, B)<span style="font-weight: bold;"><br>
-</span>
-<div style="text-align: center;"><span style="font-weight: bold;">Output :</span> a single RGB color image<img style="width: 865px; height: 411px;" src="inputoutput.png" alt=""></div>
+</span><span style="font-weight: bold;">Output :</span> a single RGB color image<br>
+<div style="text-align: center;"><span style="font-weight: bold;"></span><img style="width: 865px; height: 411px;" src="inputoutput.png" alt=""></div>
 <div style="text-align: center;"><br>
 <br>
 Figure 1: Input and output<br>
@@ -43,7 +43,7 @@ computation.<br>
 2.&nbsp; The error function is Normalized cross correlation, for two
 images, the higer correlation, the better alignment, so the optimal
 solution should be the position of maxmum correlation. Typically, it
-should also be a local maximalinside the searching window. <br>
+should also be a local maximal inside the searching window.<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
 3.&nbsp; Time: For the provided input images (3200*3800*3), the program
 builds a five level image pyramid. The total time is around 16 seconds.<br>
