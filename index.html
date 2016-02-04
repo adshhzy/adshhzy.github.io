@@ -3,9 +3,10 @@
 <br>
 <span style="font-weight: bold;">Problem definition:</span> Giving three mismatched color channel images (R, G, B) of the same scene, align them to produce a single RGB color image.<br>
 <span style="font-weight: bold;">Input</span> <span style="font-weight: bold;">:</span>&nbsp; three color channel images (R, G, B)<span style="font-weight: bold;"><br>
-Output :</span> a single RGB color image<br>
+</span>
+<div style="text-align: center;"><span style="font-weight: bold;">Output :</span> a single RGB color image<img style="width: 865px; height: 411px;" src="inputoutput.png" alt=""></div>
 <div style="text-align: center;"><br>
-<img title="aa" style="width: 645px; height: 261px;" src="../../../../zhiyanghuang/Library/Containers/com.tencent.qq/Data/Library/Application%20Support/QQ/Users/532039848/QQ/Temp.db/400ABBD5-E37A-474B-8CF1-E2AD96B73815.png" alt=""><br>
+<br>
 Figure 1: Input and output<br>
 <div style="text-align: left;"><br style="font-weight: bold;">
 <span style="font-weight: bold;">Approach and Algorithmic Analysis</span><br>
@@ -24,32 +25,25 @@ resolution level of the pyramid to the highest resolution level.&nbsp; <br>
 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 3.2&nbsp;&nbsp; For
 each level, exhaustively search over a window of possible
 displacements. Initial window size is 16*16 and sucessive window sizes
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; are all fixed
-to 8*8 to decrease the computation.<br>
+are all fixed to 8*8 to decrease the computation.<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 3.3&nbsp; Use
-correlation as the measurement of matchness (higer correlation, better
-alignment).<br>
+normalized cross correlation as the measurement of matchness (higer
+correlation, better alignment).<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 4.
 Align orginal G and R to B based on the misalignment information, then
 combine them into a single RGB color image, then crop the border base
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; on a default value (10%) to
-remove the border line.<br>
+on a default value (10%) to remove the border line.<br>
 <br>
 <span style="font-weight: bold;">Algorithmic Analysis</span><br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
 1.&nbsp; Using image pyramid and hierachical search to reduce the
 computation.<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-2.&nbsp; The error function is correlation, for two images, the higer
-correlation, the better alignment, so the optimal solution should be
-the position of &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; maxmum
-correlation.<br>
+2.&nbsp; The error function is Normalized cross correlation, for two
+images, the higer correlation, the better alignment, so the optimal
+solution should be the position of maxmum correlation. Typically, it
+should also be a local maximalinside the searching window. <br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
 3.&nbsp; Time: For the provided input images (3200*3800*3), the program
 builds a five level image pyramid. The total time is around 16 seconds.<br>
@@ -79,8 +73,10 @@ Figure 3: Output of "00998u.tif"<br>
 <img style="width: 569px; height: 425px;" src="00451u.png" alt="">   </div>
 </div>
  Figure 4: Output of "00451u.tif"<br>
-<br>
-<br>
+<img style="width: 882px; height: 461px;" src="01044u.png" alt=""><br>
+Figure 5: Output of "01044u.tif"<br>
+<img style="width: 846px; height: 581px;" src="01064u.png" alt=""><br>
+Figure 5: Output of "01064u.tif"<br>
 <div style="text-align: left;"><br>
 </div>
 
