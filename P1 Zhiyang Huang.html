@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta content="text/html; charset=UTF8" http-equiv="content-type"><title>P1 Zhiyang Huang</title></head><body>Project 1&nbsp;&nbsp; Zhiyang Huang<br>
+<br>
+<span style="font-weight: bold;">Problem definition:</span> Giving three mismatched color channel images (R, G, B) of the same scene, align them to produce a single RGB color image.<br>
+<span style="font-weight: bold;">Input</span> <span style="font-weight: bold;">:</span>&nbsp; three color channel images (R, G, B)<span style="font-weight: bold;"><br>
+Output :</span> a single RGB color image<br>
+<div style="text-align: center;"><br>
+<img title="aa" style="width: 645px; height: 261px;" src="../../../../zhiyanghuang/Library/Containers/com.tencent.qq/Data/Library/Application%20Support/QQ/Users/532039848/QQ/Temp.db/400ABBD5-E37A-474B-8CF1-E2AD96B73815.png" alt=""><br>
+Figure 1: Input and output<br>
+<div style="text-align: left;"><br style="font-weight: bold;">
+<span style="font-weight: bold;">Approach and Algorithmic Analysis</span><br>
+<br>
+<span style="font-weight: bold;">Pipeline</span>: <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 1. Crop the margin of each input image (10% for each side)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+2. Build the image pyramid for the three color channel images. (lowest
+resolution size should be less than (200*200))<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp; 3. Compute the misalignment of&nbsp; R to B, and of G to B.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; 3.1&nbsp;&nbsp; Hierachically search from the lowest
+resolution level of the pyramid to the highest resolution level.&nbsp; <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 3.2&nbsp;&nbsp; For
+each level, exhaustively search over a window of possible
+displacements. Initial window size is 16*16 and sucessive window sizes
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; are all fixed
+to 8*8 to decrease the computation.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 3.3&nbsp; Use
+correlation as the measurement of matchness (higer correlation, better
+alignment).<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 4.
+Align orginal G and R to B based on the misalignment information, then
+combine them into a single RGB color image, then crop the border base
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; on a default value (10%) to
+remove the border line.<br>
+<br>
+<span style="font-weight: bold;">Algorithmic Analysis</span><br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+1.&nbsp; Using image pyramid and hierachical search to reduce the
+computation.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+2.&nbsp; The error function is correlation, for two images, the higer
+correlation, the better alignment, so the optimal solution should be
+the position of &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; maxmum
+correlation.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+3.&nbsp; Time: For the provided input images (3200*3800*3), the program
+builds a five level image pyramid. The total time is around 16 seconds.<br>
+<br>
+<span style="font-weight: bold;">Experimental Analysis:</span><br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; Basically the algorithm aligns the inputs
+well.&nbsp; For "00998u.tif" and "00451u.tif", the algorithm works
+nearly perfectly, but for "01520u.tif", the result is not good.&nbsp;
+The reason may be that there are so many edges (the background trees)
+in this image and thus, there are so many local minimals for the error
+function. And remember that we are using image pyramid and hierachical
+search, the true grobal minimum may be overwhelmed in low resulotion
+levels, which leads to the misalignment on the beginning and it is not
+able to be fixed by the hierachical search over following levels.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Below is some experimental results.<br>
+<div style="text-align: center;"><img style="width: 478px; height: 391px;" src="01520u.png" alt=""><img style="width: 476px; height: 356px;" src="01520u_zoom.png" alt=""><br>
+Figure 2: Output of "01520u.tif". (Left: full picture, Right: zooming in)<br>
+<br>
+
+<div style="text-align: center;"><img src="00998u.png" alt=""><br>
+Figure 3: Output of "00998u.tif"<br>
+
+<br>
+
+</div>
+<img style="width: 569px; height: 425px;" src="00451u.png" alt="">   </div>
+</div>
+ Figure 4: Output of "00451u.tif"<br>
+<br>
+<br>
+<div style="text-align: left;"><br>
+</div>
+
+
+</div>
+</body></html>
