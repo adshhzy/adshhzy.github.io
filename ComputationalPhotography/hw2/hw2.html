@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta content="text/html; charset=UTF8" http-equiv="content-type"><title>hw2</title></head><body>
+  
+<div style="text-align: center;"><big><big><big><span style="font-weight: bold;">Hw2 &nbsp; &nbsp;&nbsp; Zhiyang Huang</span></big></big></big><br>
+<br>
+<img style="width: 611px; height: 371px;" src="d.jpg" alt=""><br>
+Figure 1. Earth and moon (Mixed Gradients)<br>
+<br>
+<br>
+<div style="text-align: left;">
+<div style="text-align: center;"><img style="width: 229px; height: 211px;" src="earth.jpg" alt="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img style="width: 550px; height: 344px;" src="night.jpg" alt="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="d2.jpg" alt=""><br>
+<br>
+Figure 2. Earth and night scene, and naive copying.<br>
+</div>
+<br>
+Figure 1 comes from a blending of a earth picture and a night scene
+with moon (figure 2) ONLY by using mixed Gradients. Mixed Gradient
+method use the same framework of Poison Blending, but replace the the
+source gradient with the gradient in source or target with the larger
+magnitude as the guide:<br>
+<img src="equa.png" alt=""><br>
+where&nbsp; "d_ij" is the value of the gradient from the source or the target image with larger magnitude.<br>
+<br>
+<br>
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">1. Toy Problem:</span> By combining
+the 3 objective function into one function and formulate it as a least
+square problem {min ||Ax-b||^2}, we recover the same picture of input
+picture with Error: 9.1453e-14:<br>
+<img src="toyout.jpg" alt=""><br>
+And the key code is:<br>
+<br>
+for y=1:(imh)<br>
+&nbsp;&nbsp;&nbsp; for x = 1: (imw-1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aaa(ind,:) = [e,im2var(y,x+1),1];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aaa(ind+1,:) = [e,im2var(y,x),-1];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; b(e) = im(y,x+1)-im(y,x);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e=e+1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ind=ind+2;<br>
+&nbsp;&nbsp;&nbsp; end<br>
+end<br>
+<br>
+for y=1:(imh-1)<br>
+&nbsp;&nbsp;&nbsp; for x = 1: (imw)&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aaa(ind,:) = [e,im2var(y+1,x),1];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aaa(ind+1,:) = [e,im2var(y,x),-1];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; b(e) = im(y+1,x)-im(y,x);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e=e+1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ind=ind+2;<br>
+&nbsp;&nbsp;&nbsp; end<br>
+end<br>
+Aaa(ind,:) = [e,im2var(1,1),1];<br>
+b(e)=im(1,1); <br>
+A = spconvert(Aaa);<br>
+v = lscov(A, b');<br>
+im_out=v(im2var);<br>
+<br>
+<br>
+<span style="font-weight: bold;">2. Poisson Blending<br>
+</span>Poisson blending reserve the gradient of source image, but
+during blending, The energy associated with the target image merely be
+considered along the merging seam, which can easily produce obvious
+visual change. See the two results below. We can observe that in figure
+2 and 3, obvious visual artifact can be seen. The reason is that before
+blending, there is some background part in the source image, which has
+different texture pattern with the background in the target image, and
+notice that poisson blending only reserve the gradient of the source
+image, with a mindest consideration on the smooth change along the
+seam, so poisson blending can not blend the background pattern
+properly, which will definitely results in discontinuity of texture
+pattern. And the new amplitude of the variable will be determined by
+the pixel of the target image on the seam, so though poisson blending
+reserve the gradient of the source image, but propagate the amplitude
+of the target image. So after blending, you will see a blending image
+with texture pattern of source image, and color of target image, which
+is kind of weird.&nbsp; <br>
+<br>
+<br>
+<img style="width: 118px; height: 147px;" src="penguin-chick.jpeg" alt="">&nbsp; <img style="width: 328px; height: 401px;" src="im2.JPG" alt=""><img style="width: 483px; height: 366px;" src="p2.jpg" alt=""><img style="width: 443px; height: 513px;" src="p1.jpg" alt=""><br>
+<br>
+<br>
+<div style="text-align: center;">Figure 2. penguin and snow (<span style="font-weight: bold;">Poisson Blending</span>)<br>
+<img style="width: 236px; height: 177px;" src="boat.jpg" alt=""><img style="width: 548px; height: 351px;" src="water.jpg" alt=""><img src="pb2.jpg" alt=""><img style="width: 551px; height: 323px;" src="pb1.jpg" alt=""><br>
+<br>
+<br>
+<br>
+Figure 3. boat and water (<span style="font-weight: bold;">Poisson Blending</span>)<br>
+<br>
+<div style="text-align: left;"><span style="font-weight: bold;">3. Mixed Gradients</span><br>
+<span style="font-weight: bold;"><br>
+</span>Compare with the poisson blending, mixed gradients is able to
+capture and blend the background pattern, as it use the gradient in
+source or target with the larger magnitude as the guide instead of only
+considering the gradient of sourse image. So the result will look much
+better. But it still cant handle the color issue, and it requires the
+similarity of the background between source image and target image to
+ensure a fair blending.<br>
+<br>
+<img style="width: 352px; height: 198px;" src="plane.jpg" alt=""><img style="width: 424px; height: 339px;" src="sky.jpg" alt=""><img style="width: 532px; height: 399px;" src="c2.jpg" alt=""><img style="width: 576px; height: 430px;" src="c.jpg" alt=""><br>
+<div style="text-align: center;">Figure 4. plane and sky <span style="font-weight: bold;">(Mixed Gradient)</span><br style="font-weight: bold;">
+</div>
+
+<div style="text-align: center;"><img style="width: 755px; height: 484px;" src="mb1.jpg" alt=""><br>
+</div>
+<div style="text-align: center;">Figure 5. boat and water <span style="font-weight: bold;">(Mixed Gradient)</span><br style="font-weight: bold;">
+</div>
+
+
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">Color2Gray <br>
+</span>To get the gradient information, we first transform RGB to HSV
+space, and notice that the gradient information are mostly capture in S
+and V channel. We solve the problem by using mixed gradient method,
+where "d_ij" become the gradient in S channel or V channel with the
+larger magnitude. Just like the toy problem, we add constrains energy
+which measures the magnitude difference between variables and gray
+image (g_i).<br>
+<img src="gray.png" alt=""><br>
+And the result is :<br>
+<img style="width: 293px; height: 287px;" src="colorBlindTest35.png" alt=""><img style="width: 436px; height: 327px;" src="gray2.jpg" alt=""><br>
+<br>
+The core code:<br>
+for y=1:(imh)<br>
+&nbsp;&nbsp;&nbsp; for x = 1: (imw-1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aaa(ind,:) = [e,im2var(y,x),1];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aaa(ind+1,:) = [e,im2var(y,x+1),-1];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; b(e) = dx(y,x);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e=e+1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ind=ind+2;<br>
+&nbsp;&nbsp;&nbsp; end<br>
+end<br>
+<br>
+for y=1:(imh-1)<br>
+&nbsp;&nbsp;&nbsp; for x = 1: (imw)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aaa(ind,:) = [e,im2var(y,x),1];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aaa(ind+1,:) = [e,im2var(y+1,x),-1];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; b(e) = dy(y,x);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e=e+1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ind=ind+2;<br>
+&nbsp;&nbsp;&nbsp; end<br>
+end<br>
+for y=1:(imh)<br>
+&nbsp;&nbsp;&nbsp; for x = 1: (imw)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aaa(ind,:) = [e,im2var(y,x),1];&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; b(e) = im_gray(y,x);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e=e+1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ind=ind+1;<br>
+&nbsp;&nbsp;&nbsp; end<br>
+end<br>
+<br>
+A = spconvert(Aaa);<br>
+v = lscov(A, b');<br>
+im_out=v(im2var);<br>
+<br>
+&nbsp;<br>
+ </div>
+</div>
+</div>
+
+
+</div>
+</body></html>
