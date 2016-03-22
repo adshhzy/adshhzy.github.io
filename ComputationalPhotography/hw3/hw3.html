@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta content="text/html; charset=UTF8" http-equiv="content-type"><title>p3ZhiyangHuang</title></head><body>Hw3&nbsp; Zhiyang Huang<br>
+<br>
+<br>
+1. Algorithm for texture synthesis:&nbsp; Basically follows the core algorithm described in the paper. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1) Using SSD of
+overlapping to find the suitable subimages orderly from left to
+right&nbsp; each row and from top to bottom. In each position, randomly
+cut 1000 samples and pick &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; the one minimizes the overlapping
+SSD.&nbsp; Store chosen subimages with the overlapping region.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 2) After finding all
+subimages, from&nbsp; left to right, orderly merge the image with
+respect to each row using the dynamic programming method in the paper. <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 3) From top to bottom,
+orderly merge rows using the dynamic programming method in the paper.<br>
+<br>
+2.&nbsp; Algorithm for texture Transfer: The same as the algorithm
+described in the paper, using the same pineline above with modified
+error function in each iteration.<br>
+<br>
+<br>
+Result for texture synthesis:<br>
+<br>
+One failure result is the leafs. Though locally it appears to be good,
+but globally, the connection of the thick lines breaks, which resulted
+by the global pattern of the texture that could not be capture unless
+using a window with the same size of the image. (e.g. this texture
+consists of a global pattern (main leaf veins) and the small local
+pattern)<br>
+<br>
+<div style="text-align: center;">&nbsp;<img src="caustics.png" alt=""><img style="width: 461px; height: 408px;" src="waterS.png" alt=""><br>
+<br>
+<br>
+Figure 1 caustics<br>
+<br>
+<br>
+<img style="width: 284px; height: 189px;" src="FarmAerial.jpg" alt=""><img style="width: 518px; height: 462px;" src="FarmS.png" alt=""><br>
+Figure 2 FarmAerial<br>
+<img style="width: 293px; height: 195px;" src="leaf.jpg" alt=""><img style="width: 447px; height: 407px;" src="leafS.png" alt=""><br>
+Figure 3 Leafs<br>
+<br>
+<br>
+&nbsp;&nbsp;<img src="beans.jpeg" alt=""><img style="width: 554px; height: 505px;" src="beansS.png" alt=""><br>
+<br>
+Figure 4 Beans<br>
+<img src="block2.jpeg" alt=""><img style="width: 575px; height: 524px;" src="blocksS.png" alt=""><br>
+Figure 5 Blocks<br>
+<img src="rocks.jpeg" alt=""><img style="width: 529px; height: 471px;" src="rocksS.png" alt=""><br>
+Figure 6 Rocks<br>
+<br>
+<br>
+<div style="text-align: left;">Result for texture transfer: to make it look good, it will be trick to pick up the texture and the cooresponding map<br>
+<br>
+<div style="text-align: center;"><img src="salty.jpeg" alt="">&nbsp;&nbsp;&nbsp; <img src="faceTransfer.jpeg" alt=""><img style="width: 309px; height: 282px;" src="face1.png" alt=""><br>
+<br>
+Figure 7 Faces 1<br>
+<br>
+<img src="cloud.jpeg" alt="">&nbsp;&nbsp;&nbsp;&nbsp; <img src="faceTransfer.jpeg" alt=""><img style="width: 295px; height: 268px;" src="face2.png" alt=""><br>
+<br>
+Figure 8 Faces 2<br>
+<br>
+<img src="b3.jpeg" alt=""><img style="width: 305px; height: 305px;" src="human2.png" alt=""><img style="width: 386px; height: 355px;" src="human.png" alt=""><br>
+Figure 9 human<br>
+<br>
+<img src="salty.jpeg" alt=""><img src="god.jpg" alt=""><img style="width: 384px; height: 318px;" src="god.png" alt=""><br>
+<br>
+Figure 10 Chinese Charater "god"<br>
+<br>
+</div>
+<br>
+</div>
+ 
+
+</div>
+</body></html>
