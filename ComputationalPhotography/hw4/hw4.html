@@ -104,11 +104,17 @@ Figure 4: Generation curve for humming birds video suggested by Robert<br>
 <img src="waterfallCurve.png" alt=""><br>
 
 
-Figure 5: Generation curve for waterfalls video suggested by Robert<br>
+Figure 5: Generation curve for waterfalls video (use first 1200 frames as input) suggested by Robert<br>
+<br>
 (In the original video there is a transition from a waterfall scene to
 another one, which uses fadeout to make a smooth transition, so after
 the video went through that transition, it can only repeat in the later
-scene as it costs too high to transit back to the first scene)<br>
+scene as it costs too high to transit back to the first scene. Also
+there are very limitted good transitions, but the q-learning force it
+to find a good transition near the end of the input video, and assign a
+high transition probability, which leads to smooth video generation.
+This is actually a good example to illustrate the effectiveness of
+q-leaning )<br>
 <div style="text-align: left;">Video Link:&nbsp; <br>
 <a href="clock_input_out.mp4">clock_input_out.mp4</a><br>
 <br>
