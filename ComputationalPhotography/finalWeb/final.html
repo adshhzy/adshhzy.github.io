@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta content="text/html; charset=UTF8" http-equiv="content-type"><title>final</title></head><body>
+<div style="text-align: center; font-weight: bold;"><big><big>
+  Transform a scene from day to night (lightening) using convolutional neuron network<br>
+<small style="font-weight: normal;"><small>Chen Liu&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Zhiyang Huang</small></small><br>
+<br>
+<br>
+</big></big>
+<div style="text-align: left;">1. Problem formulation:&nbsp;&nbsp; Giving an image of a scene in daytime, generate the night version of the scene.<br>
+<br style="font-weight: normal;">
+<span style="font-weight: normal;">&nbsp;&nbsp;&nbsp; As you can see in
+the two pictures below,&nbsp; differs from just adjusting the lightness
+histogram which can be easily done by fix pipeline or manual editory in
+photoshop,&nbsp; we specially focus on transform the photo of a large
+scene (e.g. city) taken at daytime into the night version of the scene.
+Particularly, we want to lighten the light in reasonable possition in
+the scene (e.g. streetlight, window of the building) while keep a
+blurry sketch of the buildings.</span><br>
+<br>
+<img style="width: 480px; height: 270px;" src="1.jpg" alt="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<img style="width: 480px; height: 270px;" src="5.jpg" alt=""><big><big><big>&#8730; </big></big></big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <img style="width: 480px; height: 270px;" src="fake.jpg" alt=""><big><big><big>X</big></big></big><br>
+2. Structure of the CNN<br>
+<br>
+<div style="text-align: left;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <span style="font-weight: normal;">We
+decide to start with the structure of a recent paper "Colorful image
+colorization" as shown in the following picture. This paper achieve
+automatica colorization of a gray image using CNN. In this paper, while
+the lightness (gray scale) are given, they predict the distribution
+(histogram) of the color channel on each pixel. To apply it to our
+task, we are going to change the input to the full RGB image, and
+predict the lightness</span> <span style="font-weight: normal;">distribution on each pixel.
+To simplify the problem, we ignore the color of the light and instead
+we color it by simply using the common color of the light (e.g. white
+or orange)</span> <span style="font-weight: normal;">as we can predict the position of lighting.</span><br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <span style="font-weight: normal;">In a
+word, we input the RGB(Lab) image and only output the new lightness
+channel (L), and replace the lightness channel of old picture with it.
+It will be like we are actually producing a heat map.</span><br style="font-weight: normal;">
+</div>
+<br>
+<br>
+<div style="text-align: center;"><img style="width: 640px; height: 187px;" src="struct.png" alt=""><br>
+<br>
+<div style="text-align: left;">3. DataSet<br>
+<br>
+&nbsp;&nbsp;&nbsp; <span style="font-weight: normal;">We are planning
+to use AMOS as it can provide daytime photo and night photo of a same
+scene with a fix camara,&nbsp; which perfectly matches our task.
+Currently we have made up 12000 pairs of daytime and night from 10
+scene. </span>&nbsp;&nbsp;&nbsp; <br>
+&nbsp; <br>
+&nbsp;<img style="width: 480px; height: 270px;" src="20160226_205741.jpg" alt="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img style="width: 480px; height: 270px;" src="20160227_002758.jpg" alt=""><br>
+&nbsp;<br>
+<br>
+4. Limitation<br>
+<br>
+&nbsp;&nbsp;&nbsp; <span style="font-weight: normal;">We need to pick
+cameras from AMOS manually and images from the same camera are highly
+correlated (providing only one valuable pair), thus we have
+difficulties in gathering enough data.</span><br style="font-weight: normal;">
+<br>
+<br>
+</div>
+</div>
+</div>
+<div style="text-align: center;"><big><big>
+
+</big></big></div>
+</div>
+</body></html>
