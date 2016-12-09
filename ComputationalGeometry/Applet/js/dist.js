@@ -1,12 +1,9 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})
-({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /* 
     Directed acyclic graph (for storing triangle hierachy)
     */ 
 
     var _ = require('underscore'); 
-
-
 
     var DAG = function() {
         this.nLvl = 0;
@@ -31,6 +28,9 @@
         }
         
     };
+    DAG.prototype.addLvlCounter = function() { 
+    this.nLvl ++;
+    }; 
 
 // or "neighbors"
 DAG.prototype.children = function(n) {
@@ -40,14 +40,9 @@ DAG.prototype.children = function(n) {
 DAG.prototype.root = function() { 
     return _.last(_.keys(this.adj)); 
 }; 
-// DAG.prototype.resetLvlCounter = function() { 
-//     this.nLvl = 1;
-// }; 
-DAG.prototype.addLvlCounter = function() { 
-    this.nLvl ++;
-}; 
 
-module.exports = DAG;
+
+module.exports = DAG; 
 },{"underscore":6}],2:[function(require,module,exports){
 /* 
     SVG drawing and GUI control methods
@@ -56,12 +51,6 @@ module.exports = DAG;
     var _ = require('underscore'); 
     var util = require('./util'); 
     var kirkpatrick = require('./point-location'); 
-
-    var svg = d3.select("#canvas")
-    .append("svg")
-    .attr("width", "100%")
-    .attr("height", "100%");
-
 
     var stg = d3.select("#treecanvas")
     .append("svg")
@@ -122,15 +111,20 @@ module.exports = DAG;
     }; 
 
 
+
+
+    var svg = d3.select("#canvas")
+    .append("svg")
+    .attr("width", "100%")
+    .attr("height", "100%");
+
     var drawPoint = function(p, color) { 
         svg.append("circle")
         .attr("cx", p.x + "px")
         .attr("cy", p.y + "px")
         .attr("r", "4px")
-        .attr("fill", color);
+        .attr("fill", color); 
     }; 
-
-    
 
     var drawLine = function(a, b, color) { 
         svg.append("line")  
@@ -218,6 +212,7 @@ module.exports = DAG;
 
 var buttons = { 
     closePolygon: d3.select("#closePolygon"),
+    addPolyline: d3.select("#addPolyline"),
     triangulate: d3.select("#triangulate"),
     findIndependentSet: d3.select("#findIndependentSet"),
     remove: d3.select("#remove"),
@@ -229,6 +224,7 @@ var buttons = {
 var clear = function() { 
     drawTriangle(kirkpatrick.outer_triangle, "black", "white"); 
 };
+
 
 var clearStg = function() { 
     stg.selectAll("*").remove();
@@ -305,17 +301,27 @@ var drawStgTree = function(tr, pickNodes) {
     //console.log(tr);
     //console.log(hasParent); 
     //console.log(tr.root());
-    //console.log(nodeEachLvl); 
+    //console.log(nodeEachLvl);
+
+    var wstartdist = 80;
+    var hstartdist = 150;
+    var lvldist = 100;
+    var nodeDist = 50;
+    var midNodePos = 600;
+
+    var setMidPos = function( nTotal){
+
+        midNodePos = wstartdist+nTotal/2*nodeDist;
+
+    }
 
 
     var ComputeNodePos = function( nlvl, nNodeInd, nTotal) {
 
 
 
-        var hstartdist = 150;
-        var lvldist = 100;
-        var nodeDist = 50;
-        var midNodePos = 500;
+
+        
         var midNodeInd = nTotal/2;
 
         var nodexpos = midNodePos + (nNodeInd - midNodeInd) * nodeDist;
@@ -335,6 +341,7 @@ var drawStgTree = function(tr, pickNodes) {
     var nodePos = new Array();
 
     for(var i = 0; i<nodeEachLvl.length; ++i){
+        if(i==0)setMidPos(nodeEachLvl[0].length);
         for(var j = 0; j<nodeEachLvl[i].length; ++j){
 
             nodePos[nodeEachLvl[i][j]] = ComputeNodePos(i,j,nodeEachLvl[i].length);
@@ -388,53 +395,56 @@ var drawStgTree = function(tr, pickNodes) {
 
 var highlightArray = new Array();
 
+
 var reset = function() { 
     buttons.closePolygon.attr("disabled", null); 
+    buttons.addPolyline.attr("disabled", "disabled"); 
     buttons.triangulate.attr("disabled", "disabled"); 
     buttons.findIndependentSet.attr("disabled", "disabled"); 
     buttons.remove.attr("disabled", "disabled");
     buttons.step.attr("disabled", "disabled"); 
     buttons.locateAnother.attr("disabled", "disabled"); 
-
-    points = []; 
+    
+    pointstmp = []; 
     edges = [];  
     step_count = 0; 
     query = undefined; 
+    polygon_list = [];
+    points = [];
+
     highlightArray = new Array();
-
-    //dag.resetLvlCounter();
-
+    
     clear(); 
-
+    
     d3.select("#console").text("Waiting for initial input..."); 
-
+    
     var handleClick = function() {
         var pt = d3.mouse(this); 
         var p = { x: pt[0], y: pt[1] }; 
         var last; 
-        if (!_.isEmpty(points)) { 
-            last = { x: _.last(points).x, y: _.last(points).y }; 
+        if (!_.isEmpty(pointstmp)) { 
+            last = { x: _.last(pointstmp).x, y: _.last(pointstmp).y }; 
         }
-
+        
         if (util.triangleContainsPoint(p, kirkpatrick.outer_triangle)) {
-            if (!_.isEmpty(points)) { 
+            if (!_.isEmpty(pointstmp)) { 
                 var selfCrosses = _.reduce(edges, function(m, e) {
                     return util.sidesIntersect(p, last, e[0], e[1]) || m; 
                 }, false); 
             } else { 
                 var selfCrosses = false; 
             }
-
+            
             if (!selfCrosses) { 
                 drawPoint(p, "black");
                 
-                if (!_.isEmpty(points)) { 
+                if (!_.isEmpty(pointstmp)) { 
                     drawLine(p, last, "black"); 
                     edges.push([p, last]); 
                 }    
-
-                points.push(p);
-                //d3.select("#console").text("Total number of points = " + (points.length + 3)); 
+                
+                pointstmp.push(p);
+                d3.select("#console").text("Total number of pointstmp = " + (points.length + 3)); 
             } else { 
                 d3.select("#console").text("No self-crosses allowed!"); 
             }
@@ -443,14 +453,95 @@ var reset = function() {
             d3.select("#console").text("Outside of triangle!"); 
         }
     };
-
+    points.push(pointstmp)
     svg.on("click", handleClick);
 };
 
-reset(); 
-//drawStg();
+var resetNew = function() {     
+    d3.select("#console").text("Waiting for additional input..."); 
+    pointstmp = []; 
+    edges = [];  
+    step_count = 0; 
+    query = undefined; 
+
+    var handleClick = function() {
+        var pt = d3.mouse(this); 
+        var p = { x: pt[0], y: pt[1] }; 
+        var last; 
+        if (!_.isEmpty(pointstmp)) { 
+            last = { x: _.last(pointstmp).x, y: _.last(pointstmp).y }; 
+        }
+        
+        if (util.triangleContainsPoint(p, kirkpatrick.outer_triangle)) {
+            if (!_.isEmpty(pointstmp)) { 
+                var selfCrosses = _.reduce(edges, function(m, e) {
+                    return util.sidesIntersect(p, last, e[0], e[1]) || m; 
+                }, false); 
+            } else { 
+                var selfCrosses = false; 
+            }
+
+            // find nearest point and distant 
+            var nearestDist = function(clickPt){
+            	//d3.select("#console").text(points.length + "XX"); 
+                var minVal = 10000000000;
+                var minIdx = 0;
+                var dist = 0;
+                for (i = 0; i < pointstmp.length; i++) { 
+                    dist = (pointstmp[i].x - clickPt.x) * (pointstmp[i].x - clickPt.x) + (pointstmp[i].y - clickPt.y) * (pointstmp[i].y - clickPt.y);
+                    if (dist<minVal){
+                        minVal = dist;
+                        minIdx = i;
+                    }
+                }
+                
+                return { 
+                    val: minVal,
+                    idx: minIdx
+                };
+            }
+
+            if (!selfCrosses) { 
+                var nearestpoint = nearestDist(p);
+                var sq_dist = nearestpoint.val;
+                var nearestID = nearestpoint.idx;
+                d3.select("#console").text(nearestID); 
+                if (sq_dist < 200) {
+                	d3.select("#console").text(sq_dist); 
+                    if (!_.isEmpty(pointstmp)) { 
+                        drawLine(pointstmp[nearestID], last, "black"); 
+                        edges.push([pointstmp[nearestID], last]); 
+                    }    
+                }
+                else{
+                    drawPoint(p, "black");
+                    
+                    if (!_.isEmpty(pointstmp)) { 
+                        drawLine(p, last, "black"); 
+                        edges.push([p, last]); 
+                    }    
+
+                    pointstmp.push(p);
+                    //d3.select("#console").text("Total number of points = " + (points.length + 3)); 
+                }
+            } else { 
+                d3.select("#console").text("No self-crosses allowed!"); 
+            }
+        }
+        else {
+            d3.select("#console").text("Outside of triangle!"); 
+        }
+    };
+    
+    svg.on("click", handleClick);
+    points.push(pointstmp);
+};
+
+
 var points = []; 
 var edges = []; 
+
+reset(); 
 
 var graph; 
 var dag; 
@@ -461,11 +552,12 @@ var highlight;
 var triangulation; 
 
 buttons.closePolygon.on("click", function() { 
-    if (points.length < 3) { 
+    var pointsClose = _.last(points);
+    if (pointsClose.length < 3) { 
         d3.select("#console").text("Select at least three points!");
     } else { 
-        var first = _.first(points); 
-        var last = _.last(points); 
+        var first = _.first(pointsClose); 
+        var last = _.last(pointsClose); 
 
         var selfCrosses = _.reduce(edges, function(m, e) { 
             return util.sidesIntersect(first, last, e[0], e[1]) || m;
@@ -475,25 +567,50 @@ buttons.closePolygon.on("click", function() {
             d3.select("#console").text("No self-crosses allowed!");
         } else { 
             drawLine(first, last, "black");
-            d3.select("#console").text("Waiting to be triangulated...");
-            buttons.closePolygon.attr("disabled", "disabled"); 
-            buttons.triangulate.attr("disabled", null); 
+            d3.select("#console").text("Waiting to add polylines...");
+            //buttons.closePolygon.attr("disabled", null); 
+            buttons.addPolyline.attr("disabled", null); 
+            //buttons.triangulate.attr("disabled", null); 
         }
     }
+    resetNew();
 }); 
+
+buttons.addPolyline.on("click", function() { 
+    //check closed loop
+    /* if (find(degree of point i==1)){ 
+        d3.select("#console").text("Select at least three points!");
+    } else {*/ 
+        d3.select("#console").text("Waiting to be triangulated...");
+        buttons.closePolygon.attr("disabled", "disabled"); 
+        buttons.addPolyline.attr("disabled", "disabled"); 
+        buttons.triangulate.attr("disabled", null); 
+        points.pop();
+    });
 
 buttons.triangulate.on("click", function() { 
     var res = kirkpatrick.run(points);
     graph = res.graph; 
     dag = res.dag; 
     drawGraph(graph, "black"); 
-    //console.log(graph);
+
 
     d3.select("#console").text("Waiting to identify independent set...");
     buttons.triangulate.attr("disabled", "disabled"); 
     buttons.findIndependentSet.attr("disabled", null); 
-
     drawStgTree(dag);
+
+
+    //console.log(kirkpatrick.inner_triangles);
+
+    // var tri = graph.all_triangles[highlight]; 
+    // var pts = [tri.v1, tri.v2, tri.v3]; 
+    // pts = _.map(pts, (p) => graph.vertices[p].point); 
+    // highlightTriangle(pts, "yellow", "yellow"); 
+
+
+
+
 }); 
 
 buttons.findIndependentSet.on("click", function() { 
@@ -517,22 +634,20 @@ buttons.remove.on("click", function() {
         buttons.findIndependentSet.attr("disabled", null); 
     }
 
-    buttons.remove.attr("disabled", "disabled"); 
     drawStgTree(dag);
-    //dag.addLvlCounter();
 
-    //console.log(dag);
+
+    buttons.remove.attr("disabled", "disabled"); 
 }); 
+
 
 var locatePoint = function() {
     clear();
     highlightArray = new Array();
-    //drawStgTree();
     step_count = 0;
     query = undefined;  
     d3.select("#console").text("Waiting for query point selection...");
     drawTriangulation(_.first(graph.triangulations), graph); 
-
     var handleClick = function() { 
         var pt = d3.mouse(this); 
         var p = { x: pt[0], y: pt[1] };
@@ -555,17 +670,14 @@ var locatePoint = function() {
     };
 
     svg.on("click", handleClick); 
-
 }; 
 
 buttons.step.on("click", function() { 
     var len = _.size(graph.triangulations); 
     clear(); 
 
-    
-
     if (step_count >= len) { 
-
+        clear();
 
         d3.select("#console").text("SUCCESS: Point located!");
 
@@ -579,6 +691,7 @@ buttons.step.on("click", function() {
         highlightArray.push(Number(highlight+""));
         drawStgTree(dag,highlightArray);
 
+
         buttons.step.attr("disabled", "disabled"); 
         buttons.locateAnother.attr("disabled", null);
         return;
@@ -587,8 +700,6 @@ buttons.step.on("click", function() {
 
     highlightArray.push(Number(highlight));
     drawStgTree(dag,highlightArray);
-
-
 
     // highlight containing triangle at current level
     var tri = graph.all_triangles[highlight]; 
@@ -626,7 +737,6 @@ buttons.step.on("click", function() {
     // re-draw query 
     drawPoint(query, "green");
 
-
     while (_.contains(graph.triangulations[len - 1 - step_count], highlight)) {
         step_count++; 
     }
@@ -640,11 +750,11 @@ buttons.reset.on("click", reset);
     Contains code for Planar Graph, triangulation, finding independent sets, 
     and removing vertices from graph (creating DAG structure) 
     */
-    var DAG = require('./dag'); 
 
     var _ = require('underscore'); 
 var earcut = require('earcut'); // triangulation library  
 var util = require('./util'); 
+var DAG = require('./dag'); 
 
 var PlanarGraph = function() {
     this.vertices = []; 
@@ -779,6 +889,7 @@ PlanarGraph.prototype.removeDirectedEdge = function(v1, v2) {
 
 /* TRIANGULATION FUNCTIONS */ 
 
+/*
 // input = graph and array of vertex ids, output = array of arrays of triangles (vertex ids)
 var getTriangulation = function(graph, polygon, hole) { 
     var input = []; 
@@ -816,12 +927,70 @@ var getTriangulation = function(graph, polygon, hole) {
 
     return output; 
 }; 
+*/
+
+// input = graph and array of vertex ids, output = array of arrays of triangles (vertex ids)
+var getTriangulation = function(graph, polygon, holes) { 
+    var input = []; 
+    var total_hole = [];
+
+
+    _.each(polygon, function(v) { 
+        input.push(graph.vertices[v].point.x); 
+        input.push(graph.vertices[v].point.y); 
+    }); 
+
+    var triangulations; 
+    //console.log(polygon);
+    if (holes != null) { 
+        for(var i=0; i < holes.length; i+=1) {
+            for(var j=0; j < holes[i].length; j+=1) {
+                total_hole.push(holes[i][j]);
+            }
+        }
+        //var hole_index = input.length / 2; 
+        var hole_i;
+        var hole_index = [];
+        var initial_length = input.length / 2;
+        for(hole_i = 0; hole_i < holes.length; hole_i += 1) {
+            _.each(holes[hole_i], function(v) { 
+                input.push(graph.vertices[v].point.x); 
+                input.push(graph.vertices[v].point.y); 
+            }); 
+            hole_index.push(initial_length);
+            initial_length += holes[hole_i].length;
+        }
+        //console.log(input);
+        triangulations = earcut(input, hole_index); 
+
+    } else { 
+        console.log(input);
+        triangulations = earcut(input); 
+        console.log(triangulations);
+    }
+    
+    var output = []; 
+    for (var i = 0; i < triangulations.length; i += 3) { 
+        var id1 = triangulations[i]; 
+        var id2 = triangulations[i+1];
+        var id3 = triangulations[i+2];
+
+        var p1 = (id1 < polygon.length) ? polygon[id1] : total_hole[id1 - polygon.length];
+        var p2 = (id2 < polygon.length) ? polygon[id2] : total_hole[id2 - polygon.length];
+        var p3 = (id3 < polygon.length) ? polygon[id3] : total_hole[id3 - polygon.length];
+
+        output.push([p1, p2, p3]); 
+    }
+
+    return output; 
+}; 
 
 // input = graph and array of vertex ids, output = array of new triangle ids s
 var triangulate = function(graph, polygon, hole) {
     var triangles = getTriangulation(graph, polygon, hole); 
     var new_triangle_ids = []; 
 
+    //console.log(triangles);
     _.each(triangles, function(t) { 
         // connect all three vertices in triangle 't' 
         graph.connect(t[0], t[1]);
@@ -846,12 +1015,13 @@ var triangulate = function(graph, polygon, hole) {
 /* ACTIONS RELATED TO INDEX.JS */ 
 
 var outer_triangle = [{ x: 325, y: 5 }, { x: 650, y: 650 }, { x: 5, y: 650 }]; 
-
+var inner_triangles = [];
 // input = array of Points, output = resulting graph (w/ outer triangle) 
 var run = function(pts) { 
     var graph = new PlanarGraph(); 
-    var polygon = []; 
+    var polygon_list = []; 
 
+    /*
     _.each(pts, function(p, i) { 
         graph.addVertex(p.x, p.y); 
         if (i != 0) { 
@@ -859,21 +1029,52 @@ var run = function(pts) {
         }
         polygon.push(i); 
     }); 
+    */
+    var index;
+    var current_num = 0;
+    var points = pts;
 
-    graph.connect(0, pts.length-1);
+    for (index = 0; index < points.length; index += 1) {
+        var polygon_points = points[index];
+        var inner_index;
+        var current_start = current_num;
+        var polygon = [];
+        for (inner_index = 0; inner_index < polygon_points.length; inner_index += 1) {
+            graph.addVertex(polygon_points[inner_index].x, polygon_points[inner_index].y);
+            polygon.push(current_num);
+            if(inner_index != 0) {
+                graph.connect(inner_index,inner_index-1);
+            }
+            current_num += 1;
+        }
+        polygon_list.push(polygon);
+        graph.connect(current_start, current_start+polygon_points.length-1);
+    }
 
-    var inner_triangles = triangulate(graph, polygon); 
+    //graph.connect(0, pts.length-1);
+
+    //console.log(polygon);
+
+    inner_triangles =[];
+    var index_j;
+    for(index_j = 0; index_j < polygon_list.length; index_j += 1) {
+        //console.log(triangulate(graph, polygon_list[index_j]));
+        inner_triangles = _.union(inner_triangles, triangulate(graph, polygon_list[index_j])); 
+    }
+
+    //console.log(inner_triangles);
+    
     // add outer triangle 
     graph.addVertex(outer_triangle[0].x, outer_triangle[0].y); 
     graph.addVertex(outer_triangle[1].x, outer_triangle[1].y); 
     graph.addVertex(outer_triangle[2].x, outer_triangle[2].y); 
 
-    graph.connect(pts.length, pts.length+1); 
-    graph.connect(pts.length+1, pts.length+2); 
-    graph.connect(pts.length, pts.length+2); 
+    graph.connect(current_num, current_num+1); 
+    graph.connect(current_num+1, current_num+2); 
+    graph.connect(current_num, current_num+2); 
 
-    var outer = [pts.length, pts.length+1, pts.length+2]; 
-    var outer_triangles = triangulate(graph, outer, polygon); 
+    var outer = [current_num, current_num+1, current_num+2]; 
+    var outer_triangles = triangulate(graph, outer, polygon_list); 
 
     graph.triangulations.push(_.union(inner_triangles, outer_triangles)); 
 
@@ -882,7 +1083,6 @@ var run = function(pts) {
     var triangles = _.map(_.last(graph.triangulations), function(t) { return t; }); // last triangulation
     
     _.each(triangles, (t) => dag.addNode(t)); 
-    //dag.addLvlCounter();
 
     return {
         graph: graph,
@@ -914,16 +1114,13 @@ var findIndependentSet = function(graph) {
 // remove verts from graph, re-triangulate holes in graph, add old/new triangle links to DAG 
 var removeVertices = function(graph, verts, dag) { 
     var triangles = _.map(_.last(graph.triangulations), function(t) { return t; }); // last triangulation
-    
     _.each(triangles, (t) => dag.addNode(t)); 
     dag.addLvlCounter();
-
     _.each(verts, function(v) { 
         var res = graph.removeVertex(v); 
 
         // remove old triangles from previous triangulation
         triangles = _.reject(triangles, function(t) { return _.contains(res.old_triangles, t); }); 
-
         var new_triangles = triangulate(graph, res.polygon); 
         
         // add new triangles to triangulation 
@@ -940,10 +1137,6 @@ var removeVertices = function(graph, verts, dag) {
     }); 
 
     graph.triangulations.push(triangles); // save as next triangulation
-    //console.log(DAG.nLvl );
-    
-    
-    
 }; 
 
 module.exports = { 

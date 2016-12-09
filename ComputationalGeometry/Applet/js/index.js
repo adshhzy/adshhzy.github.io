@@ -11,21 +11,10 @@ var svg = d3.select("#canvas")
 .attr("width", "100%")
 .attr("height", "100%");
 
-var stg = d3.select("#treecanvas")
-.append("stg")
-.attr("width", "100%")
-.attr("height", "100%");
-
 var drawPoint = function(p, color) { 
     svg.append("circle")
     .attr("cx", p.x + "px")
     .attr("cy", p.y + "px")
-    .attr("r", "4px")
-    .attr("fill", color); 
-    
-    stg.append("circle")
-    .attr("cx", p.x + "px")
-    .attr("cy", 300+p.y + "px")
     .attr("r", "4px")
     .attr("fill", color); 
 }; 
