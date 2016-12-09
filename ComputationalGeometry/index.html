@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>main</title></head><body>CSE 546T Computational Geometry (Spring 2016)<br>
+Final project<br>
+Group member:Dingwen Li , Zhiyang Huang, Hong Xuan<br>
+Kirkpatrick's Triangular Decomposition<br>
+<br>
+1. Description<br>
+Kirkpatrick's Triangular Decomposition is an useful method for
+efficiently querying the location of a given point in a certain
+polygon. In class, we have learned how to use this method to query a
+location for a single polygon with interior structure. Such problem can
+be apply to some real situation such as query a point in which room of
+a big house. We found that whatever the polygon looks like, the method
+always adds addition large triangle outside the input polygon and
+triangulate all the interior structure inside of the big triangle.
+Therefore, in our project, we solved the problem that there exists
+multiple simple polygons, and then input a query point, and return the
+polygon which contains the query point.<br>
+<br>
+In this project, we add a large triangle outside all polygons and use
+Kirkpatrick method run the query process, finally the search structure
+directed acyclic graph will be displayed for demonstration.<br>
+<br>
+2. Algorithm<br>
+the algorithm that we implemented is the Kirkpatrick triangular
+decomposition. The reference we use is the open source from Github
+(https://github.com/projedi/geometry-kirkpatrick). Based on the source
+code, we modify the scripts of triangulating single polygons and add
+our own functions for triangulating multiple polygons inside the outer
+triangle and visualizing directed acyclic graph as we query the point
+location. <br>
+<br>
+First, we design the input and the data structure that store graphical
+information, such as points, edges, polygons, and triangles. Now the
+applet can get input of multiple polygons and each of them can be
+triangulated separately. In this process, we also add &#8216;catch point&#8217;
+function so that now we can close the polygon directly without clicking
+additional button.<br>
+<br>
+Second, we write a new triangulation function which can simultaneously
+takes the outer triangle and polygons as input to triangulate the
+polygons and outer triangle. Then we use the triangulation function
+provided in the reference code to triangulate the individual polygon.
+The vertices, edges and triangles information are all store in the
+graph data structure.<br>
+<br>
+Finally, we run the Kirkpatrick's triangular decomposition algorithm and visualize the directed acyclic graph (DAG). <br>
+<br>
+Dingwen and Hong finish the first and second part, and Zhiyang finish the third part.<br>
+<br>
+3. Run-Time Analysis: Our algorithm is implemented according to the
+common Kirkpatrick triangular decomposition, which performs
+triangulation in O(nlogn) time, builds tree in O(nlogn), query in
+O(logn).<br>
+<br>
+4. Instructions:<br>
+<ul>
+  <li>Left click several points inside the outer triangle, then
+click button "Close Polygon". This will automatically save the polygon.</li>
+  <li><img style="width: 500px; height: 541px;" alt="2" src="images/Screen%20Shot%202016-12-09%20at%203.09.38%20PM.png"><br>
+  </li>
+  <li>Repeat the above step for different polygons. When finish adding
+polygons, click the button "Finish Adding Polyine". Then click button
+"Triangulate".</li>
+  <li><img style="width: 500px; height: 576px;" alt="3" src="images/Screen%20Shot%202016-12-09%20at%203.10.26%20PM.png"><br>
+  </li>
+  <li>After
+getting triangulated polygons, click button "Find Independent Set" and
+then click button "Remove Set &amp; Re-Triangulate". This will remove
+the independent point set and re-triangulate the polygons. <br>
+  </li>
+  <li><img style="width: 1000px; height: 551px;" alt="4" src="images/Screen%20Shot%202016-12-09%20at%203.10.59%20PM.png"></li>
+  <li><img style="width: 500px; height: 585px;" alt="212" src="images/Screen%20Shot%202016-12-09%20at%203.11.39%20PM.png"><br>
+  </li>
+  <li><img style="width: 1000px; height: 518px;" alt="444" src="images/Screen%20Shot%202016-12-09%20at%203.11.51%20PM.png"><br>
+  </li>
+  <li>The query is performed by clicking arbitrary point inside the outer triangle and then click the button "Step".</li>
+  <li><img style="width: 1000px; height: 556px;" alt="5" src="images/Screen%20Shot%202016-12-09%20at%203.12.20%20PM.png"></li>
+  <li><img style="width: 500px; height: 571px;" alt="332" src="images/Screen%20Shot%202016-12-09%20at%203.12.45%20PM.png"></li>
+  <li>Finally we will get the DAG for query the point location.<br>
+  </li>
+  <li><img style="width: 1000px; height: 460px;" alt="33" src="images/Screen%20Shot%202016-12-09%20at%203.12.56%20PM.png"><br>
+  </li>
+</ul>
+<br>
+<br>
+5. Applet<br>
+<br>
+link: /Applet/Kirkpatrick.html<br>
+<br>
+
+</body></html>
