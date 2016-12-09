@@ -1,0 +1,165 @@
+<html>
+    <head>
+        <title>Point Location - Kirkpatrick's Algorithm</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <style>
+            div#background { 
+                background-color: white; 
+                width: 100%; 
+                height: 1000px; 
+                display: flex; 
+                justify-content: center; 
+                align-content: center;
+            }
+            div#backgroundboxforC { 
+                background-color: white; 
+                width: 670px; 
+                height: 1000px; 
+                display: flex; 
+                justify-content: center; 
+                align-content: center;
+                flex-direction: column;
+            }
+            div#canvas { 
+                background-color: white; 
+                width: 660px; 
+                height: 660px;  
+                align-self: left;
+            }
+		    div#treecanvas { 
+				background-color: white; 
+				width: 800px; 
+				height: 1000px;  
+				align-self: right;
+		    }
+            div#controls { 
+                display: flex;
+                width: 600px;
+                flex-direction: column;
+                justify-content: flex-start; 
+                float:center;
+                align-self:center;
+            }
+            div#controlsbox1_1 { 
+                display: flex;
+                background-color: white; 
+                width: 600px;
+                flex-direction: row;
+                justify-content: center; 
+                /*float:left;*/
+                align-self:center;
+                align-content: center;
+            }
+            div#controlsbox2_1 { 
+                display: flex;
+                background-color: white; 
+                width: 32%;
+                flex-direction: column;
+                justify-content: center; 
+                /*float:left;*/
+                align-self:center;
+            }
+            div#controlsbox2_2 { 
+                display: flex;
+                background-color: white; 
+                width: 32%;
+                flex-direction: column;
+                justify-content: center; 
+                /*float:left;*/
+                align-self:center;
+            }
+            div#controlsbox2_3 { 
+                display: flex;
+                background-color: white; 
+                width: 32%;
+                flex-direction: column;
+                justify-content: center; 
+                /*float:left;*/
+                align-self:center;
+            }
+            div#emptycontrolbox { 
+                display: flex;
+                background-color: white; 
+                width: 1%;
+                flex-direction: column;
+                justify-content: center; 
+                /*float:left;*/
+                align-self:center;
+            }
+
+
+            p#console { 
+                width: 300px;
+            }
+        </style>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+    </head>
+    <body> 
+        <left> 
+            <div id="background">
+
+                <div id="backgroundboxforC">
+            
+                    <div id="canvas"></div>
+
+                    <bottom> 
+
+
+                    <div id="controls">
+                        <!-- <h1>Controls:</h2><br> -->
+                        <!-- <button class="btn btn-warning" id="closePolygon">Close Polygon</button><br>
+                        <button class="btn btn-primary" id="triangulate">Triangulate</button><br>
+                        <button class="btn btn-success" id="findIndependentSet">Find Independent Set</button><br>
+                        <button class="btn btn-warning" id="remove">Remove Set & Re-Triangulate</button><br>
+                        <button class="btn btn-danger" id="reset">Reset</button><br><br>
+        
+                        <button class="btn btn-primary" id="step">Step</button><br>
+                        <button class="btn btn-warning" id="locateAnother">Locate Another Point</button><br>
+
+ -->
+                        <p id="console"></p>
+                        <div id="controlsbox1_1">
+
+                            <div id="controlsbox2_1">
+                                <button class="btn btn-warning" id="closePolygon">Close Polygon</button><br>
+                                <button class="btn btn-primary" id="triangulate">Triangulate</button><br>
+                            </div>
+                            <div id="emptycontrolbox"> </div>
+                            <div id="controlsbox2_2">
+                                <button class="btn btn-success" id="findIndependentSet">Find Independent Set</button><br>
+                                <button class="btn btn-warning" id="remove">Remove Set & Re-Triangulate</button><br>
+                            </div>
+                            <div id="emptycontrolbox"> </div>
+                            <div id="controlsbox2_3">
+                                <button class="btn btn-primary" id="step">Step</button><br>
+                                <button class="btn btn-warning" id="locateAnother">Locate Another Point</button><br>
+
+                            </div>
+                        </div>
+                        <button class="btn btn-danger" id="reset">Reset</button><br><br>
+                        
+                        <!-- <h1>Console:</h1> -->
+                        
+                    </div>
+                    </bottom>
+                
+                             
+                </div>
+                <div id="treecanvas"></div> 
+                                             
+            </div>
+              
+             
+        </left>
+        <right> 
+            
+        </right>
+        
+		<center> 
+			
+
+            
+		</center>
+        <script src="js/dist.js"></script>
+    </body>
+</html>
