@@ -1,0 +1,227 @@
+﻿@import url("960_12_col.css");
+
+#page
+{
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    clear: both;
+}
+
+body {
+    font-family: "Segoe UI Light";
+    background-color:rgb(225,225,225);
+
+    /*help remove horizontal scroll bar of iframe in index.html*/
+    overflow-x: hidden;
+}
+
+a
+{
+    text-decoration: none; /*no underline*/
+}
+
+dl.contactlist dt {float:left; font-weight:bold;}
+dl.contactlist dd {float:none; padding-bottom:5px; margin-left:70px;}
+dl.pubauthors dt {float:left; font-weight:bold;}
+dl.pubauthors dd {float:none; padding-bottom:5px; margin-left:85px;}
+dl.dllist dt {float:left; font-size:14px;}
+dl.dllist dd {float:none; font-size:14px; padding-bottom:5px; margin-left:70px;}
+
+a:link {color:#ffffff;}
+a:visited {color:#ffffff;}
+
+#portrait {
+	background-image: url(../img/black.png); 
+	background-position: 50% 50%;
+	background-repeat: no-repeat; 
+	background-size: 400px auto;
+	width: 400px;
+	height: 300px;
+}
+
+#navigation a:hover{
+    font-weight: bolder;
+    font-style: italic;
+}
+
+#navigation a:active {
+    text-shadow:2px 4px gray;
+    font-weight: bolder;
+}
+
+.Scrollable {
+	overflow-y:scroll;
+	height: 500px;
+}
+
+figure.LeftAlign {
+	margin: 0;
+	text-align: left;
+}
+
+figure.Center {
+	margin: 0;
+	text-align: center;
+}
+
+figcaption {
+	font-size: 1em;
+	font-weight: bold;
+}
+
+img.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+img.WidthAuto{
+	width: auto;
+}
+
+img.HeightAuto{
+	height: auto;
+}
+
+img.LeftAlign{
+	float: left;
+	margin: 0px 10px 10px 0px
+}
+
+img.SolidBorder{
+	border: 3px solid #00f;
+}
+
+img.Spaced{
+	margin: 5px;
+}
+
+figure.SolidBorder{
+	border: 3px solid #00f;
+}
+
+.ProjectBox {
+    margin: 5px 0px 5px 0px;
+    border: 1px solid rgb(186, 186, 186);
+}
+
+.Title {
+    margin-bottom: 3px;
+}
+
+.IndexTable {
+    width: 951px;
+    table-layout: auto;
+}
+
+#contentTR {
+    height: 500px;
+}
+
+#footerTR {
+    background-color: rgb(0, 107, 194);
+    height: 100px;
+    text-align: center;
+    font-size: 0.8em;
+    color: #ffffff;
+}
+
+.IndexTR {
+    width: 950px;
+}
+
+.ProjCell {
+    vertical-align: top;
+}
+
+.ProjCell300px {
+    vertical-align: top;
+	width: 300px;
+}
+.ProjHRuler {
+    clear: left;
+    /*clear: right;*/
+}
+
+/****************heading styles***********************/
+#heading
+{
+    width: 100%;
+    height: 100px;
+    background-color: #ea700d;
+
+    margin-left: auto;
+    margin-right: auto;
+    clear: both;
+}
+
+#heading h1
+{
+    padding-top: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#navigation
+{
+    margin: 0;
+    width: 150px;
+    height: 500px;
+    background-color: rgb(0, 200, 90);
+}
+
+#navigation ul
+{
+    margin: auto auto auto -25px;
+    padding-top: 10px;
+    /* background-color:Red; /*debug*/
+    list-style-type:none;
+	height: 100%
+}
+
+#content iframe
+{
+    /*position: relative;*/
+    height: 500px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#container a:link
+{
+    color:Blue;
+}
+#container a:visited
+{
+    color:lightseagreen;
+}
+
+#container p
+{
+    /* width: 500px;*/
+}
+/***************************************/
+.selected
+{
+    /*color: #bababa;*/
+    text-decoration:none;
+    text-shadow:2px 4px gray;
+    font-weight: bolder;
+}
+
+.invisible{
+    display:none;
+}
+
+.align-right
+{
+    float: right;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+#container.invisible{
+    display:none;
+}
+
+

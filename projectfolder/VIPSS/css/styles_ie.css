@@ -1,0 +1,11 @@
+﻿/*
+** INCLUDED in index.html
+** used to mimic seamless effect of iframe in IE
+*/
+
+iframe[seamless]{
+    background-color: transparent;
+    border: 0px none transparent;
+    padding: 0px;
+    overflow: hidden;
+}
